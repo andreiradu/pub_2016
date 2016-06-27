@@ -1,12 +1,18 @@
-baseDir = "../"
+baseDir = path.getabsolute("..").."/"
 
 workspace "Game"
-    configurations {"Degug", "Release"}
+    configurations {"Debug", "Release"}
      location(baseDir .. ".prj")
-    
+    flags
+    {
+        "FatalCompileWarnings",
+        "MultiProcessorCompile",
+        
+    }
 dependsOn = {}
 
 dofile(baseDir.."engine/engine.lua")
+dofile(baseDir.."dependencies/SDL2-2.0.4/sdl.lua")
 
 project "Game"
     kind "ConsoleApp"
@@ -30,5 +36,6 @@ project "Game"
       optimize "On"
       
     dependsOn["engine"]()
+    dependsOn["sdl"]()
     
     

@@ -19,6 +19,6 @@ project "Engine"
       defines { "NDEBUG" }
       optimize "On"
       
-    dependsOn["engine"] = function ()
-            
+    dependsOn["sdl"] = function ()
+            includedirs { "public" }
     end
