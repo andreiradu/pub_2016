@@ -3,6 +3,7 @@ baseDir = path.getabsolute("..").."/"
 workspace "Game"
     configurations {"Debug", "Release"}
      location(baseDir .. ".prj")
+     buildoptions{"/wd4251"}
     flags
     {
         "FatalCompileWarnings",
@@ -11,8 +12,8 @@ workspace "Game"
     }
 dependsOn = {}
 
-dofile(baseDir.."engine/engine.lua")
 dofile(baseDir.."dependencies/SDL2-2.0.4/sdl.lua")
+dofile(baseDir.."engine/engine.lua")
 
 project "Game"
     kind "ConsoleApp"
@@ -34,8 +35,10 @@ project "Game"
     filter "configurations:Release"
       defines { "NDEBUG" }
       optimize "On"
+    filter "*"
+    local state = {includes={}, links={}, defines={}}
+    dependsOn["engine"](state)
       
-    dependsOn["engine"]()
-    dependsOn["sdl"]()
-    
-    
+    includedirs(state.includes)
+    links(state.links)
+    defines(state.defines)

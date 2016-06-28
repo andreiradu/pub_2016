@@ -126,6 +126,9 @@ project "SDL"
       defines { "NDEBUG" }
       optimize "On"
 
-    dependsOn["engine"] = function ()
-            includedirs { "include" }
+    local inclPath = path.getabsolute("./include")
+    dependsOn["sdl"] = function (state)
+            table.insert(state.includes, path.getrelative(path.getabsolute("."), inclPath))
+            table.insert(state.links, "sdl")
+            table.insert(state.links, "opengl32")
     end
