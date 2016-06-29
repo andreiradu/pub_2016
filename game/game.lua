@@ -3,7 +3,7 @@ baseDir = path.getabsolute("..").."/"
 workspace "Game"
     configurations {"Debug", "Release"}
      location(baseDir .. ".prj")
-     buildoptions{"/wd4251"}
+     buildoptions{"/wd4251 /wd4273"}
     flags
     {
         "FatalCompileWarnings",

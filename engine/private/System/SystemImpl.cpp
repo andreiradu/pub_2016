@@ -1,4 +1,5 @@
 #include <Engine/System/System.h>
+#include <Engine/Rendering/OpenGLRenderer.h>
 #include "System/SystemImpl.h"
 
 namespace Engine
@@ -26,18 +27,36 @@ void SystemImpl::Init(SCreationSettings&& cs)
 	glEnable(GL_TEXTURE_2D);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	glEnable(GL_NORMALIZE);
+	m_renderer = new Renderer();
+	m_renderer->Init();
+	m_renderer->OnResize(cs.windowWidth, cs.windowHeight);
 }
 
 void SystemImpl::Start()
 {
 	bool done = false;
+	int posX = 64;
+	int posY = 64;
+	int speed = 3;
 	while (!done) {
-
+		m_renderer->BeginFrame();
+		m_renderer->RenderSprite(Sprite(nullptr, 0,0,64,64), posX, posY);
 		SDL_Event evt;
 		while (SDL_PollEvent(&evt)) {
 			switch (evt.type)
 			{
 			case SDL_KEYDOWN:
+			{
+				if (evt.key.keysym.sym == SDLK_UP)
+					posY -= speed;
+				if (evt.key.keysym.sym == SDLK_DOWN)
+					posY += speed;
+				if (evt.key.keysym.sym == SDLK_LEFT)
+					posX -= speed;
+				if (evt.key.keysym.sym == SDLK_RIGHT)
+					posX += speed;
+				break;
+			}
 			case SDL_KEYUP:
 			{
 
@@ -45,6 +64,14 @@ void SystemImpl::Start()
 			}
 			case SDL_WINDOWEVENT:
 				switch (evt.window.event) {
+				case SDL_WINDOWEVENT_RESIZED:
+				{
+					SDL_Window *window = SDL_GetWindowFromID(evt.window.windowID);
+					int w, h;
+					SDL_GetWindowSize(window, &w, &h);
+					m_renderer->OnResize(w, h);
+					break;
+				}
 				case SDL_WINDOWEVENT_CLOSE:
 				{
 					SDL_Window *window = SDL_GetWindowFromID(evt.window.windowID);
@@ -52,13 +79,14 @@ void SystemImpl::Start()
 					{
 						SDL_DestroyWindow(window);
 					}
-
+					break;
 				}
 				break;
 				}
 				break;
 			}
 		}
+		m_renderer->EndFrame();
 		SDL_GL_MakeCurrent(m_window, m_context);
 		SDL_GL_SwapWindow(m_window);
 

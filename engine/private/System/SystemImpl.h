@@ -4,7 +4,9 @@
 
 namespace Engine
 {
+	class Renderer;
 	struct SCreationSettings;
+
 	class ENGINE_API SystemImpl
 	{
 	public:
@@ -13,5 +15,6 @@ namespace Engine
 	protected:
 		SDL_Window* m_window;
 		SDL_GLContext m_context;
+		Renderer* m_renderer;
 	};
 }
