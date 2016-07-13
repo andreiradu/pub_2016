@@ -40,7 +40,8 @@ void SystemImpl::Start()
 	int speed = 3;
 	while (!done) {
 		m_renderer->BeginFrame();
-		m_renderer->RenderSprite(Sprite(nullptr, 0,0,64,64), posX, posY);
+		Engine::Texture* tex = Engine::Texture::LoadTexture("characters.tga");
+		m_renderer->RenderSprite(Sprite(tex, 275,41, 275+16, 41+20), posX, posY);
 		SDL_Event evt;
 		while (SDL_PollEvent(&evt)) {
 			switch (evt.type)
